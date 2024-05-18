@@ -25,7 +25,7 @@ banner(){
 	echo -e "
 • ▌ ▄ ·.       ▐▄• ▄       
 ·██ ▐███▪▪      █▌█▌▪▪     
-▐█ ▌▐▌▐█· ▄█▀▄  ·██·  ▄█▀▄    ~ MoXo ~ 
+▐█ ▌▐▌▐█· ▄█▀▄  ·██·  ▄█▀▄    ~ MoXo v1.0~ 
 ██ ██▌▐█▌▐█▌.▐▌▪▐█·█▌▐█▌.▐▌   [By: sajitha_tj]
 ▀▀  █▪▀▀▀ ▀█▄▀▪•▀▀ ▀▀ ▀█▄▀▪  
 "
@@ -44,12 +44,12 @@ After initializing, you can use moxo to store different variables.
   moxo COMMAND VALUES
 
 COMMANDS:
-  new    initialize moxo for a new challenge
-  set    set new variables or change existing ones
-           usage: moxo set VARIABLE_NAME VARIABLE_VALUE
-  get    get the value of a variable
-           usage: moxo set VARIABLE_NAME
-  reset  reset current configuration. same as new
+  new     initialize moxo for a new challenge
+  set     set new variables or change existing ones
+            usage: moxo set VARIABLE_NAME VARIABLE_VALUE
+  get     get the value of a variable
+            usage: moxo get VARIABLE_NAME
+  reset   reset current configuration. same as new
 
 Use only one COMMAND from above list at a time.
 Moxo is still in a development phase. New updates will come soon!"
@@ -80,7 +80,11 @@ set_variables(){
 		if [[ $OLD_VALUE == $VARIABLE_VALUE ]]; then
 			echo -e "[-] value already exists.\n$VARIABLE_NAME : $VARIABLE_VALUE"
 		else
-			echo -e "[+] variable changed.\n$VARIABLE_NAME : $OLD_VALUE => $GREEN$VARIABLE_VALUE$RESET"
+			if [[ $OLD_VALUE == "" ]]; then
+				echo -e "[+] variable changed.\n$VARIABLE_NAME : $GREEN$VARIABLE_VALUE$RESET"
+			else
+				echo -e "[+] variable changed.\n$VARIABLE_NAME : $OLD_VALUE => $GREEN$VARIABLE_VALUE$RESET"
+			fi
 		fi
 	fi
 }
@@ -96,26 +100,25 @@ get_variables(){
 	fi
 }
 
-if [[ ! -f "$DATA_FILE" ]];then
-	echo -e "[-] Moxo hasn't initialized.\nUsage: moxo new [challenge name].\nTry 'moxo --help' for more information"
-	exit
-fi
+check_for_data_file(){
+	if [ ! -f "$DATA_FILE" ];then
+		echo -e "[-] Moxo hasn't initialized.\nUsage: moxo new [challenge name].\nTry 'moxo --help' for more information"
+		exit
+	fi
+}
 
 case $1 in
-	-h | --help )
+	"-h" | "--help" )
 		usage
 		;;
 	new | reset)
 		args=($*)
 		
-		#name of the challenge in topic format
-		CHALLENGE_NAME=$(echo ${2:0:1} | tr a-z A-Z)
-		CHALLENGE_NAME="$CHALLENGE_NAME${2:1:${#2}}"
-		
-		for word in ${args[@]:2:$#}; do
+		for word in ${args[@]:1:$#}; do
 			FirstLetter=$(echo ${word:0:1} | tr a-z A-Z)
 			CHALLENGE_NAME="$CHALLENGE_NAME $FirstLetter${word:1:${#word}}"
 		done
+		CHALLENGE_NAME=$(echo $CHALLENGE_NAME | awk '{$1=$1};1')
 
 		read -p "Platform: " PLATFORM
 		
@@ -123,10 +126,12 @@ case $1 in
 		;;
 
 	set ) 
+		check_for_data_file
 		set_variables "$2" "$3"
 		;;
 
 	get )
+		check_for_data_file
 		get_variables "$2"
 		;;
 	* )

@@ -13,19 +13,22 @@ MoXo creates a data file in the current directory, so it is recommended to creat
 
 # Installation
 
-You can clone the MoXo file using git\
-`git clone https://github.com/sajitha-tj/MoXo.git`
+1. Oneliner Installation:
+`sudo curl -sL https://raw.githubusercontent.com/sajitha-tj/MoXo/main/setup.sh | bash`
 
-Or you can curl the code:\
-`curl https://raw.githubusercontent.com/sajitha-tj/MoXo/main/moxo -O moxo`
-
-You need to change permissions for moxo `chmod +x moxo`
+2. Clone git repository:
+```
+git clone https://github.com/sajitha-tj/MoXo.git
+cd MoXo
+sudo cp moxo /usr/bin/moxo
+sudo chmod +x /usr/bin/moxo
+```
 
 # Usage
 
-First you have to initialize moxo.
+First you have to initialize moxo to create the moxo data file.
 It is recommended to initialize in a new directory specific for the challenge.\
-`moxo new <challenge name>`
+`moxo new <CHALLENGE NAME>`
 
 After initializing, you can use moxo to store different variables.\
 `moxo COMMAND VALUES`
@@ -34,14 +37,13 @@ MoXo is not case sensitive, hence `rhost` will be the same as `RHOST`.
 
 # COMMANDS
 
-```
-new    initialize moxo for a new challenge
-set    set new variables or change existing ones
-         usage: moxo set VARIABLE_NAME VARIABLE_VALUE
-get    get the value of a variable
-         usage: moxo set VARIABLE_NAME
-reset  reset current configuration. same as new
-```
+| Command | Description                               | Usage                                 |
+|---------|-------------------------------------------|---------------------------------------|
+| new     | initialize moxo for a new challenge       | moxo new CHALLENGE NAME               |
+| set     | set new variables or change existing ones | moxo set VARIABLE_NAME VARIABLE_VALUE |
+| get     | get the value of a variable               | moxo get VARIABLE_NAME                |
+| reset   | reset current configuration. same as new  | moxo reset NEW CHALLENGE NAME         |
+
 Use only one COMMAND from above list at a time.
 
 # EXAMPLES
@@ -60,6 +62,10 @@ Use only one COMMAND from above list at a time.
 
 - read the value of RHOST:
 `moxo get RHOST`
+
+Example usage with other tools
+- Gobuster directory search:
+`gobuster dir -w path/to/wordlist -u "http://$(./moxo get rhost)"`
 
 # Note
 

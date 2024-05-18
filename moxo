@@ -1,0 +1,135 @@
+#!/bin/bash
+
+################################################ 
+#                                              #    
+#        Title: MoXo                           #  
+#        Author: sajitha_tj                    # 
+#        Date: 18.05.2024                      #  
+#        Version: 1.0                          # 
+#                                              # 
+################################################ 
+
+# MoXo is a CTF Manager which helps you to remember important varibles in CTFs.
+# MoXo is still in a development phase.
+
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+RESET='\033[0m'
+
+DATA_FILE=".ctf_data_moxo"
+
+
+banner(){
+	echo -e "
+• ▌ ▄ ·.       ▐▄• ▄       
+·██ ▐███▪▪      █▌█▌▪▪     
+▐█ ▌▐▌▐█· ▄█▀▄  ·██·  ▄█▀▄    ~ MoXo ~ 
+██ ██▌▐█▌▐█▌.▐▌▪▐█·█▌▐█▌.▐▌   [By: sajitha_tj]
+▀▀  █▪▀▀▀ ▀█▄▀▪•▀▀ ▀▀ ▀█▄▀▪  
+"
+}
+
+usage(){
+	banner
+	echo -e "Usage: moxo COMMAND VALUES
+MoXo is a CTF management tool which will help you during CTF challenges.
+
+First you have to initialize moxo.
+It is recommended to initialize in a new directory specific for the challenge.
+  moxo new <challenge name>
+
+After initializing, you can use moxo to store different variables.
+  moxo COMMAND VALUES
+
+COMMANDS:
+  new    initialize moxo for a new challenge
+  set    set new variables or change existing ones
+           usage: moxo set VARIABLE_NAME VARIABLE_VALUE
+  get    get the value of a variable
+           usage: moxo set VARIABLE_NAME
+  reset  reset current configuration. same as new
+
+Use only one COMMAND from above list at a time.
+Moxo is still in a development phase. New updates will come soon!"
+
+}
+
+initialize(){
+	NAME=$1
+	PLATFORM=$2
+	LHOST=$(ifconfig | grep destination | cut -d " " -f 10)
+	# create the data file
+	echo -e "NAME=$NAME\nRHOST=\nLHOST=$LHOST\nDOMAIN=\nPLATFORM=$PLATFORM\nNMAP_LOG=\n" > $DATA_FILE
+}
+
+set_variables(){
+	VARIABLE_NAME=$1
+	VARIABLE_NAME=$(echo $VARIABLE_NAME | tr a-z A-Z)
+	VARIABLE_VALUE=$2
+
+	# check if the varible already exists
+	IS_EXIST=$(grep "$VARIABLE_NAME=" $DATA_FILE)
+	if [[ $IS_EXIST == "" ]];then
+		echo "$VARIABLE_NAME=$VARIABLE_VALUE" > $DATA_FILE
+		echo -e "[+] new variable added.\n$VARIABLE_NAME : $GREEN$VARIABLE_VALUE$RESET"
+	else
+		sed -i -e "s/$IS_EXIST/$VARIABLE_NAME=$VARIABLE_VALUE/g" $DATA_FILE
+		OLD_VALUE=$(echo $IS_EXIST | cut -d "=" -f 2)
+		if [[ $OLD_VALUE == $VARIABLE_VALUE ]]; then
+			echo -e "[-] value already exists.\n$VARIABLE_NAME : $VARIABLE_VALUE"
+		else
+			echo -e "[+] variable changed.\n$VARIABLE_NAME : $OLD_VALUE => $GREEN$VARIABLE_VALUE$RESET"
+		fi
+	fi
+}
+
+get_variables(){
+	VARIABLE_NAME=$1
+	VARIABLE_NAME=$(echo $VARIABLE_NAME | tr a-z A-Z)
+	VARIABLE_VALUE=$(grep $VARIABLE_NAME $DATA_FILE | cut -d "=" -f 2)
+	if [[ $VARIABLE_VALUE = "" ]];then
+		echo "[-] $VARIABLE_NAME not configured" >&2
+	else
+		echo "$VARIABLE_VALUE"
+	fi
+}
+
+if [[ ! -f "$DATA_FILE" ]];then
+	echo -e "[-] Moxo hasn't initialized.\nUsage: moxo new [challenge name].\nTry 'moxo --help' for more information"
+	exit
+fi
+
+case $1 in
+	-h | --help )
+		usage
+		;;
+	new | reset)
+		args=($*)
+		
+		#name of the challenge in topic format
+		CHALLENGE_NAME=$(echo ${2:0:1} | tr a-z A-Z)
+		CHALLENGE_NAME="$CHALLENGE_NAME${2:1:${#2}}"
+		
+		for word in ${args[@]:2:$#}; do
+			FirstLetter=$(echo ${word:0:1} | tr a-z A-Z)
+			CHALLENGE_NAME="$CHALLENGE_NAME $FirstLetter${word:1:${#word}}"
+		done
+
+		read -p "Platform: " PLATFORM
+		
+		initialize "$CHALLENGE_NAME" "$PLATFORM"
+		;;
+
+	set ) 
+		set_variables "$2" "$3"
+		;;
+
+	get )
+		get_variables "$2"
+		;;
+	* )
+		usage
+		;;
+esac

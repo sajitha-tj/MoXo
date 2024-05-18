@@ -14,7 +14,7 @@ MoXo creates a data file in the current directory, so it is recommended to creat
 # Installation
 
 1. Oneliner Installation:
-`sudo curl -sL https://raw.githubusercontent.com/sajitha-tj/MoXo/main/setup.sh | bash`
+`curl -sL https://raw.githubusercontent.com/sajitha-tj/MoXo/main/setup.sh | bash`
 
 2. Clone git repository:
 ```
@@ -65,7 +65,7 @@ Use only one COMMAND from above list at a time.
 
 Example usage with other tools
 - Gobuster directory search:
-`gobuster dir -w path/to/wordlist -u "http://$(./moxo get rhost)"`
+`gobuster dir -w path/to/wordlist -u "http://$(moxo get rhost)"`
 
 # Note
 

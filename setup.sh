@@ -23,11 +23,8 @@ cd ~/Documents/moxo
 echo -e "[+] Downloading MoXo"
 DOWNLOAD_FAILED=0
 
-curl -s -m 20 https://raw.githubusercontent.com/sajitha-tj/MoXo/main/moxo -O moxo 2>/dev/null || DOWNLOAD_FAILED=1
-
-if [[ $DOWNLOAD_FAILED == 0 ]]; then
-	curl -s -m 20 https://raw.githubusercontent.com/sajitha-tj/MoXo/main/README.md -O readme.md 2>/dev/null || DOWNLOAD_FAILED=1
-fi
+curl -s "https://raw.githubusercontent.com/sajitha-tj/MoXo/main/moxo" -o moxo || DOWNLOAD_FAILED=1
+curl -s "https://raw.githubusercontent.com/sajitha-tj/MoXo/main/README.md" -o readme.md || DOWNLOAD_FAILED=1
 
 if [[ $DOWNLOAD_FAILED == 1 ]];then
 	echo -e "[!] Error occured while downloading the files. Check your connections and try again!" >&2

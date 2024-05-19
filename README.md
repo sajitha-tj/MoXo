@@ -13,7 +13,7 @@ MoXo creates a data file in the current directory, so it is recommended to creat
 
 # Installation
 
-1. Oneliner Installation:\
+1. One-liner Installation:
 ```
 curl -sL https://raw.githubusercontent.com/sajitha-tj/MoXo/main/setup.sh | bash
 ```

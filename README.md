@@ -64,7 +64,7 @@ Use only one COMMAND from above list at a time.
 `moxo set RHOST 10.10.2.2`
 
 - add a new variable SSHPORT with value 22:
-`moxo set RPORT 22`
+`moxo set SSHPORT 22`
 
 - read the value of RHOST:
 `moxo get RHOST`

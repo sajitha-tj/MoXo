@@ -59,7 +59,7 @@ sudo chmod +x /usr/bin/moxo || INSTALL_FAILED=2
 
 case $INSTALL_FAILED in
 	0 )
-		echo -e "[+] Installation Completed.\nGood Luck for your CTFs!"
+		echo -e "[+] Installation Completed.\nGlad to see you are rocking with moxo. Go forth and hack with glory!"
 		exit
 		;;
 	1 )

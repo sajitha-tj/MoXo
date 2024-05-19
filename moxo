@@ -58,6 +58,14 @@ Use only one COMMAND from above list at a time.
 MoXo uses xclip to copy the values to your clipboard.
 If xclip is installed, use CTRL+V to paste the value after using get command.
 
+EXAMPLES:
+	moxo new my ctf challenge    initialize moxo for a challenge named 'my ctf challenge'
+	moxo set rhost 10.10.1.1     set the variable 'rhost' value to 10.10.1.1
+	moxo set rhost 10.10.2.2     change variable 'rhost' value to 10.10.2.2
+	moxo set sshPort 22          add new variable 'sshPort' with value 22
+	moxo get RHOST               output the value of variable 'rhost' into stdout (and copy to clipboard if possible)
+
+Glad to see you are rocking with moxo. Go forth and hack with glory!
 Moxo is still in a development phase. New updates will come soon!"
 
 }

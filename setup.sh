@@ -31,6 +31,25 @@ if [[ $DOWNLOAD_FAILED == 1 ]];then
 	exit
 fi
 
+# moxo uses xclip inorder to copy variable values to your clipboard
+echo -e "[+] Check for third party apps"
+XCLIP_CHECK=$(apt list 2>/dev/null | grep "xclip" | grep "installed")
+
+if [[ $XCLIP_CHECK == "" ]]; then
+	echo -e "[!] xclip is not installed\n[!] Moxo uses xclip to copy variable values to the clipboard so that you can paste them directly with CTRL+V, after a get command"
+	read -p "[?] Do you want to install xclip? [y/n]" yn
+	# installing xclip
+	case $yn in
+		[Yy]* )
+			echo "[+] Installing xcip..."
+			sudo apt install xclip
+			;;
+	esac
+
+else
+	echo -e "[+] xclip is installed"
+fi
+
 # copying files to bin directory and changing permissions
 echo -e "[+] installing\n"
 INSTALL_FAILED=0

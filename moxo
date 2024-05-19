@@ -18,7 +18,8 @@ GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 RESET='\033[0m'
 
-DATA_FILE=".ctf_data_moxo"
+DATA_FILE=".ctf_data_moxo" # This file stores all variables
+XCLIP_IS_INSTALLED=0       # This is used to check for xclip availability before copying | 1 if installed 0 otherwise
 
 
 banner(){
@@ -34,6 +35,7 @@ banner(){
 usage(){
 	banner
 	echo -e "Usage: moxo COMMAND VALUES
+
 MoXo is a CTF management tool which will help you during CTF challenges.
 
 First you have to initialize moxo.
@@ -52,9 +54,46 @@ COMMANDS:
   reset   reset current configuration. same as new
 
 Use only one COMMAND from above list at a time.
+
+MoXo uses xclip to copy the values to your clipboard.
+If xclip is installed, use CTRL+V to paste the value after using get command.
+
 Moxo is still in a development phase. New updates will come soon!"
 
 }
+
+
+# moxo uses xclip inorder to copy variable values to your clipboard
+# This function checks if xclip is installed and if not try to install it
+check_for_xclip(){
+	XCLIP_CHECK=$(apt list 2>/dev/null | grep "xclip" | grep "installed")
+
+	if [[ $XCLIP_CHECK == "" ]]; then
+		echo -e "[!] xclip is not installed\n[!] Moxo uses xclip to copy variable values to the clipboard so that you can paste them directly with CTRL+V, after a get command"
+		XCLIP_IS_INSTALLED=0
+		read -p "[?] Do you want to install xclip? [y/n]" yn
+		# installing xclip
+		case $yn in
+			[Yy]* )
+				echo "[+] Installing xcip..."
+				sudo apt install xclip && XCLIP_IS_INSTALLED=1
+				;;
+		esac
+
+	else
+		echo -e "[+] xclip is installed. Using xclip to copy variable values to clipboard\n[+] You can use CTRL+V to paste values after a get command"
+		XCLIP_IS_INSTALLED=1
+	fi
+}
+
+
+# use xclip to copy values that will be returned with the get command
+use_xclip(){
+	if [[ $XCLIP_IS_INSTALLED == 1 ]]; then
+		echo $1 | xclip -sel clip
+	fi
+}
+
 
 initialize(){
 	NAME=$1
@@ -62,7 +101,10 @@ initialize(){
 	LHOST=$(ifconfig | grep destination | cut -d " " -f 10)
 	# create the data file
 	echo -e "NAME=$NAME\nRHOST=\nLHOST=$LHOST\nDOMAIN=\nPLATFORM=$PLATFORM\nNMAP_LOG=\n" > $DATA_FILE
+	#check for xclip
+	check_for_xclip
 }
+
 
 set_variables(){
 	VARIABLE_NAME=$1
@@ -96,6 +138,7 @@ get_variables(){
 	if [[ $VARIABLE_VALUE = "" ]];then
 		echo "[-] $VARIABLE_NAME not configured" >&2
 	else
+		use_xclip $VARIABLE_VALUE
 		echo "$VARIABLE_VALUE"
 	fi
 }
@@ -107,11 +150,14 @@ check_for_data_file(){
 	fi
 }
 
+
+# main code
 case $1 in
 	"-h" | "--help" )
 		usage
 		;;
 	new | reset)
+		banner
 		args=($*)
 		
 		for word in ${args[@]:1:$#}; do
@@ -120,7 +166,7 @@ case $1 in
 		done
 		CHALLENGE_NAME=$(echo $CHALLENGE_NAME | awk '{$1=$1};1')
 
-		read -p "Platform: " PLATFORM
+		read -p "Platform of challenge: " PLATFORM
 		
 		initialize "$CHALLENGE_NAME" "$PLATFORM"
 		;;

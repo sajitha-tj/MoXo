@@ -37,8 +37,9 @@ After initializing, you can use moxo to store different variables.
 ```
 moxo COMMAND VALUES
 ```
-
 MoXo is not case sensitive, hence `rhost` will be the same as `RHOST`.
+
+MoXo uses [xclip](https://github.com/astrand/xclip) to copy the variable values to the clipboard. Meaning you can use CTRL+V to paste the values after using the get command. Moxo checks if xclip is installed while initializing, and asks if you want to install it. If yes it install the xclip package using apt.
 
 # COMMANDS
 
@@ -74,5 +75,5 @@ Example usage with other tools
 
 # Note
 
-Moxo is still in a development phase and new updates will be come soon!\
+Moxo is still in a development phase and new updates will be come soon!
 Thank you!

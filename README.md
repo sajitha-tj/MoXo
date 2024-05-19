@@ -1,4 +1,4 @@
-# MOXO : CTF Manager
+# MoXo : CTF Manager
 
 ```
 • ▌ ▄ ·.       ▐▄• ▄       
@@ -13,7 +13,7 @@ MoXo creates a data file in the current directory, so it is recommended to creat
 
 # Installation
 
-1. Oneliner Installation:
+1. Oneliner Installation:\
 `curl -sL https://raw.githubusercontent.com/sajitha-tj/MoXo/main/setup.sh | bash`
 
 2. Clone git repository:
@@ -46,7 +46,7 @@ MoXo is not case sensitive, hence `rhost` will be the same as `RHOST`.
 
 Use only one COMMAND from above list at a time.
 
-# EXAMPLES
+# Examples
 
 - initialize moxo for a challenge named "my ctf challenge":
 `moxo new my ctf challenge`

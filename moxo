@@ -111,6 +111,7 @@ initialize(){
 	echo -e "NAME=$NAME\nRHOST=\nLHOST=$LHOST\nDOMAIN=\nPLATFORM=$PLATFORM\nNMAP_LOG=\n" > $DATA_FILE
 	#check for xclip
 	check_for_xclip
+	echo -e "[+] initialization complete\n[+] MoXo is ready to roll!"
 }
 
 
@@ -122,7 +123,7 @@ set_variables(){
 	# check if the varible already exists
 	IS_EXIST=$(grep "$VARIABLE_NAME=" $DATA_FILE)
 	if [[ $IS_EXIST == "" ]];then
-		echo "$VARIABLE_NAME=$VARIABLE_VALUE" > $DATA_FILE
+		echo "$VARIABLE_NAME=$VARIABLE_VALUE" >> $DATA_FILE
 		echo -e "[+] new variable added.\n$VARIABLE_NAME : $GREEN$VARIABLE_VALUE$RESET"
 	else
 		sed -i -e "s/$IS_EXIST/$VARIABLE_NAME=$VARIABLE_VALUE/g" $DATA_FILE

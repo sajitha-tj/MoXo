@@ -14,7 +14,9 @@ MoXo creates a data file in the current directory, so it is recommended to creat
 # Installation
 
 1. Oneliner Installation:\
-`curl -sL https://raw.githubusercontent.com/sajitha-tj/MoXo/main/setup.sh | bash`
+```
+curl -sL https://raw.githubusercontent.com/sajitha-tj/MoXo/main/setup.sh | bash
+```
 
 2. Clone git repository:
 ```
@@ -27,11 +29,14 @@ sudo chmod +x /usr/bin/moxo
 # Usage
 
 First you have to initialize moxo to create the moxo data file.
-It is recommended to initialize in a new directory specific for the challenge.\
-`moxo new <CHALLENGE NAME>`
-
-After initializing, you can use moxo to store different variables.\
-`moxo COMMAND VALUES`
+It is recommended to initialize in a new directory specific for the challenge.
+```
+moxo new <CHALLENGE NAME>
+```
+After initializing, you can use moxo to store different variables.
+```
+moxo COMMAND VALUES
+```
 
 MoXo is not case sensitive, hence `rhost` will be the same as `RHOST`.
 
